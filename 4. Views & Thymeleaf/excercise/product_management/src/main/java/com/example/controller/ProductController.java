@@ -18,30 +18,53 @@ public class ProductController {
         model.addAttribute("products", productService.findAll());
         return "list";
     }
+
     @GetMapping("/product/create")
-    public String showFormCreate(Model model){
-        model .addAttribute("product",new Product());
+    public String showFormCreate(Model model) {
+        model.addAttribute("product", new Product());
         return "create";
     }
+
     @PostMapping("/product/save")
-    public String save(@ModelAttribute Product product){
+    public String save(@ModelAttribute Product product) {
         productService.save(product);
         return "create";
     }
+
     @GetMapping("/product/delete/{id}")
-    public String delete(@PathVariable int id, RedirectAttributes attributes){
+    public String delete(@PathVariable int id, RedirectAttributes attributes) {
         productService.remove(id);
-        attributes.addFlashAttribute("msg","Xóa Thành Công");
+        attributes.addFlashAttribute("msg", "Xóa Thành Công");
         return "redirect:/product";
     }
+
     @GetMapping("/product/detail/{id}")
-    public String showDetail(@PathVariable int id, Model model){
-        model.addAttribute("product",productService.findById(id));
+    public String showDetail(@PathVariable int id, Model model) {
+        model.addAttribute("product", productService.findById(id));
         return "detail";
     }
+
     @GetMapping("search")
-    public String search(@RequestParam String name,Model model){
-        model.addAttribute("products",productService.findProduct(name));
+    public String search(@RequestParam String name, Model model) {
+        model.addAttribute("products", productService.findProduct(name));
         return "list";
+    }
+
+    @GetMapping("/product/edit/{id}")
+    public String showFormEdit(@PathVariable int id, Model model) {
+       Product product= productService.findById(id);
+        if (product==null){
+            model.addAttribute("msg","Không tìm thấy sản phẩm");
+            return "list";
+        }
+        model.addAttribute("product");
+        return "edit";
+    }
+
+    @PostMapping("/product/edit")
+    public String edit(@ModelAttribute Product product, Model model) {
+        productService.edit(product);
+        model.addAttribute("msg", "Edit successfully");
+        return "edit";
     }
 }

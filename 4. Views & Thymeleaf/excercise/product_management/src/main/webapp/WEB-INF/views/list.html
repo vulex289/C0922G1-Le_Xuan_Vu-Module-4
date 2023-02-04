@@ -20,7 +20,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/product">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Link</a>
@@ -48,7 +48,8 @@
         </div>
     </nav>
 </div>
-<a th:href="@{product/create}"><span>Tạo sản phẩm mới</span></a>
+<p th:text="${msg}" style="color: red"></p>
+<button class="btn btn-primary"><a th:href="@{/product/create}" style="color:white;">Create new product</a></button>
 <h3 style="text-align: center ">VU'STORE</h3>
 <table class="" id="product">
     <tr>
@@ -72,8 +73,6 @@
         <td><a th:href="@{product/detail/__${product.getId()}__}">view</a></td>
     </tr>
 </table>
-
 </body>
 <div th:insert="/layout::footer"></div>
-
 </html>
