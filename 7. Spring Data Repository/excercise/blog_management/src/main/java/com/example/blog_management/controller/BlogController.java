@@ -22,10 +22,10 @@ public class BlogController {
     private ICategoryService categoryService;
 
     @GetMapping("/blog")
-    public String showList(Model model, @RequestParam(required = false,defaultValue = "") String nameSearch, @PageableDefault(size = 5,page = 0,sort = "name",direction = Sort.Direction.ASC) Pageable pageable) {
+    public String showList(Model model, @RequestParam(required = false,defaultValue = "") String nameSearch, @PageableDefault(size = 2,page = 0,sort = "date",direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Blog> blogList=blogService.findByNameContaining(nameSearch,pageable);
         model.addAttribute("blogList",blogList);
-        model.addAttribute("categoryList",categoryService.findAll());
+        model.addAttribute("nameSearch",nameSearch);
         if(blogService.findAll().isEmpty()){
             model.addAttribute("mess","Danh sách trống");
         }

@@ -1,7 +1,6 @@
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Regex {
+public class RegexEspecial {
     public static void main(String[] args) {
         System.out.println(checkMessage("()[]{}{"));
     }

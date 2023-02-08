@@ -40,8 +40,8 @@
                         <a class="nav-link disabled">Disabled</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search" th:action="@{search}">
-                    <input class="form-control me-2" type="search" name="nameSearch" placeholder="Search" aria-label="Search">
+                <form class="d-flex" role="search" th:action="@{/blog}">
+                    <input class="form-control me-2" type="search" name="nameSearch" th:value="${nameSearch}" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
@@ -73,11 +73,17 @@
         <td><a th:href="@{blog/detail/__${blog.id}__}">view</a></td>
     </tr>
     <tr>
-        <td colspan="7" >
+        <td colspan="8" >
             <span th:text="${mess}"></span>
         </td>
     </tr>
 </table>
+<p th:text="${blogList.number}"></p>
+<div>
+    <a th:href="@{/blog(page=${blogList.number-1},nameSearch=${nameSearch})}" th:if="${blogList.hasPrevious()}">Truớc</a>
+    <span th:text="${blogList.number+1}"></span>/<span th:text="${blogList.totalPages}"></span>
+    <a th:href="@{/blog(page=${blogList.number+1},nameSearch=${nameSearch})}" th:if="${blogList.hasNext()}">Sau</a>
+</div>
 </body>
 <div th:insert="/layout::footer"></div>
 </html>
