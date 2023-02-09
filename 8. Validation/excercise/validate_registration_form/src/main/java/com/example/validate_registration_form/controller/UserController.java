@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserController {
     @Autowired
-    IUserService userService;
+    private IUserService userService;
 
     @GetMapping("/user")
     public String showList(Model model) {
@@ -33,12 +33,12 @@ public class UserController {
     }
 
     @PostMapping("/user/save")
-    public String save(@Validated @ModelAttribute UserDto userDto, BindingResult bindingResult, RedirectAttributes attributes,Model model) {
+    public String save(@Validated @ModelAttribute UserDto userDto, BindingResult bindingResult, RedirectAttributes attributes, Model model) {
         User user = new User();
-        if (bindingResult.hasErrors()){
-            model.addAttribute("userDto",userDto);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("userDto", userDto);
             return "create";
-        }else {
+        } else {
             BeanUtils.copyProperties(userDto, user);
             attributes.addFlashAttribute("msg", "Tạo mới thành công");
             userService.save(user);
