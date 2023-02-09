@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class SongService implements ISongService{
     @Autowired
-    ISongRepository songRepository;
+    private ISongRepository songRepository;
     @Override
     public List<Song> findAll() {
         return songRepository.findAll();

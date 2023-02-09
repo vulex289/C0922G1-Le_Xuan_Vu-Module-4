@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class SongController {
     @Autowired
-    ISongService songService;
+    private ISongService songService;
 
     @GetMapping("/song")
     public String showList(Model model) {
@@ -35,33 +35,35 @@ public class SongController {
     @PostMapping("/song/save")
     public String save(@Validated @ModelAttribute SongDto songDto, BindingResult bindingResult, RedirectAttributes attributes, Model model) {
         Song song = new Song();
-        if (bindingResult.hasErrors()){
-            model.addAttribute("songDto",songDto);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("songDto", songDto);
             return "create";
-        }else {
+        } else {
             BeanUtils.copyProperties(songDto, song);
             attributes.addFlashAttribute("msg", "Tạo mới thành công");
             songService.save(song);
             return "redirect:/song";
         }
     }
+
     @GetMapping("/song/edit/{id}")
-    public String showFormEdit(Model model, @PathVariable int id){
+    public String showFormEdit(Model model, @PathVariable int id) {
         SongDto songDto = new SongDto();
-        BeanUtils.copyProperties(songService.findById(id),songDto);
-        model.addAttribute("songDto",songDto);
+        BeanUtils.copyProperties(songService.findById(id), songDto);
+        model.addAttribute("songDto", songDto);
         return "edit";
     }
+
     @PostMapping("/song/edit")
-    public String edit(@Validated @ModelAttribute SongDto songDto,BindingResult bindingResult,Model model,RedirectAttributes attributes){
+    public String edit(@Validated @ModelAttribute SongDto songDto, BindingResult bindingResult, Model model, RedirectAttributes attributes) {
         Song song = new Song();
-        if (bindingResult.hasErrors()){
-            model.addAttribute("songDto",songDto);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("songDto", songDto);
             return "edit";
         }
-        BeanUtils.copyProperties(songDto,song);
+        BeanUtils.copyProperties(songDto, song);
         songService.save(song);
-        attributes.addFlashAttribute("msg","Sửa thành công");
+        attributes.addFlashAttribute("msg", "Sửa thành công");
         return "redirect:/song";
     }
 }
