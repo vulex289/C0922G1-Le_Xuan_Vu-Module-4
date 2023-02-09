@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout::head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button class="btn btn-primary"><a th:href="@{/user}" style="color:white;">Back to List</a></button>
+
+<div id="form">
+    <form th:action="@{/user/save}" th:object="${userDto}" method="post">
+        <br>
+        <label>First Name:</label>
+        <input type="text" th:field="*{firstName}">
+        <p th:if="${#fields.hasErrors()}" style="color:red" th:errors="*{firstName}"></p>
+        <label>Last Name:</label>
+        <input type="text" th:field="*{lastName}">
+        <p th:if="${#fields.hasErrors()}" style="color:red" th:errors="*{lastName}"></p>
+        <label>Phone Number:</label>
+        <input th:field="*{phoneNumber}">
+        <p th:if="${#fields.hasErrors()}" style="color:red" th:errors="*{phoneNumber}"></p>
+        <label>Age:</label>
+        <input type="text" th:field="*{age}">
+        <p th:if="${#fields.hasErrors()}" style="color:red" th:errors="*{age}">
+        </p>
+        <label>Email:</label>
+        <input type="text" th:field="*{email}">
+        <p th:if="${#fields.hasErrors()}" style="color:red" th:errors="*{email}">
+        </p>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+</body>
+</html>

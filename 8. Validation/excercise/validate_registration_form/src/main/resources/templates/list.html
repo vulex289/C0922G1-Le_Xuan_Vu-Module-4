@@ -23,7 +23,7 @@
                         <a class="nav-link active" aria-current="page" href="/blog">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/category">Link</a>
+                        <a class="nav-link" href="$">Link</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,50 +40,32 @@
                         <a class="nav-link disabled">Disabled</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search" th:action="@{/blog}">
-                    <input class="form-control me-2" type="search" name="nameSearch" th:value="${nameSearch}" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
         </div>
     </nav>
 </div>
 <p th:text="${msg}" style="color: red"></p>
-<button class="btn btn-primary"><a th:href="@{/blog/create}" style="color:white;">Create new Blog</a></button>
+<button class="btn btn-primary"><a th:href="@{/user/create}" style="color:white;">Create new User</a></button>
 <h3 style="text-align: center ">VU'BLOG</h3>
 <table class="" id="blog">
     <tr>
         <th>Id</th>
-        <th>Name</th>
-        <th>Author</th>
-        <th>Date</th>
-        <th>Category</th>
-        <th>Edit</th>
-        <th>Delete</th>
-        <th>Detail</th>
+        <th>FirstName</th>
+        <th>LastName</th>
+        <th>Phone Number</th>
+        <th>Age</th>
+        <th>Email</th>
     </tr>
-    <tr th:each="blog : ${blogList}">
-            <td th:text="${blog.id}"></td>
-            <td th:text="${blog.name}"></td>
-            <td th:text="${blog.author}"></td>
-            <td th:text="${blog.date}"></td>
-        <td th:text="${blog.category.name}"></td>
-        <td><a th:href="@{blog/edit/__${blog.id}__}">Edit</a></td>
-        <td><a th:href="@{blog/delete/__${blog.id}__}">Delete</a></td>
-        <td><a th:href="@{blog/detail/__${blog.id}__}">view</a></td>
-    </tr>
-    <tr>
-        <td colspan="8" >
-            <span th:text="${mess}"></span>
-        </td>
+    <tr th:each="user : ${userList}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.phoneNumber}"></td>
+            <td th:text="${user.age}"></td>
+            <td th:text="${user.email}"></td>
     </tr>
 </table>
-<p th:text="${blogList.number}"></p>
-<div>
-    <a th:href="@{/blog(page=${blogList.number - 1},nameSearch=${nameSearch})}" th:if="${blogList.hasPrevious()}">Truớc</a>
-    <span th:text="${blogList.number+1}"></span>/<span th:text="${blogList.totalPages}"></span>
-    <a th:href="@{/blog(page=${blogList.number+1},nameSearch=${nameSearch})}" th:if="${blogList.hasNext()}">Sau</a>
-</div>
+
 </body>
 <div th:insert="/layout::footer"></div>
 </html>
