@@ -18,7 +18,7 @@ import java.util.Random;
 @Controller
 public class BookController {
     @Autowired
-    IBookLoanCardService bookLoanCardService;
+  private IBookLoanCardService bookLoanCardService;
     @Autowired
     IBookService bookService;
 
