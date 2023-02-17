@@ -1,8 +1,14 @@
 package com.example.music_information_app.model;
 
+import com.example.music_information_app.service.ISongService;
+import com.example.music_information_app.service.SongService;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
 import javax.validation.constraints.*;
 
-public class SongDto {
+public class SongDto implements Validator {
+    private final ISongService songService = new SongService();
     private int id;
     @NotEmpty(message = "Không được để trống")
     @Size(max = 800,message = "Số kí tự không quá 800 kí tự")
@@ -61,4 +67,18 @@ public class SongDto {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return false;
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+//    Song song = (Song) target;
+//        List<Song> songList = songService.findAll();
+//        for (Song song1:songList) {
+//            if (song1.getName()==)
+        }
+
 }

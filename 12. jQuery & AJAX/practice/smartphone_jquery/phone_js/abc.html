@@ -2,9 +2,75 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Title</title>
 </head>
 <body>
-$END$
+<h2>Danh sách Blog</h2>
+
+<input placeholder="Nhập tiêu đề cần tìm kiếm..." id="search" type="text"/>
+<button id="find">Tìm kiếm</button>
+
+<table border="1" cellpadding="10">
+  <tr>
+    <td>#</td>
+    <td>Tiêu đề</td>
+    <td>Tác giả</td>
+    <td>Ngày viết</td>
+    <td>Thể loại</td>
+  </tr>
+
+  <tr class="load">
+    <td colspan="6">Đang tải........</td>
+  </tr>
+</table>
+
+<button id="next">Chuyển trang</button>
+
+<script src="jquery/jquery-3.5.1.min.js"></script>
+<script>
+  function showList(value, page) {
+    $("table").empty();
+    $.ajax({
+      url: "http://localhost:8080/api/blog/v1/?search=" + value,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        let tr = [];
+        let num = 5 * page;
+        if (data.length < num) {
+          num = data.length;
+        }
+
+        for (let i = 0; i < num; i++) {
+          tr.push("<tr>");
+          tr.push("<td>" + (i + 1) + "</td>");
+          tr.push("<td>" + data[i].title + "</td>");
+          tr.push("<td>" + data[i].writer + "</td>");
+          tr.push("<td>" + data[i].dateCreated + "</td>");
+          tr.push("<td>" + data[i].category.categoryName + "</td>");
+          tr.push("</tr>");
+        }
+        $("table").append(tr.join(""));
+      }
+    })
+  }
+
+  $(document).ready(function () {
+    let titleSearch = "";
+    let numPage = 1;
+    showList(titleSearch, numPage);
+
+    $("#find").click(function () {
+      titleSearch = $("#search").val();
+      numPage = 1;
+      showList(titleSearch, numPage);
+    })
+
+    $("#next").click(function () {
+      numPage++;
+      showList(titleSearch, numPage);
+    })
+  })
+</script>
 </body>
 </html>

@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-@SessionAttributes("cart")
+
 @Controller
 @RequestMapping(value = "/shop")
+@SessionAttributes("cart")
 public class ProductController {
     @ModelAttribute("cart")
     public CartDto initCard() {
@@ -27,11 +28,16 @@ public class ProductController {
     private IProductService productService;
 
     @GetMapping("")
-    public String showList(Model model,@ModelAttribute("cart") CartDto cart,
+    public String showList(Model model,@SessionAttribute(value = "cart",required = false) CartDto cart,
                            @CookieValue(value = "id", required = false, defaultValue = "-1") Long id) {
         model.addAttribute("productHistory", productService.findById(id));
         model.addAttribute("productList", productService.findAll());
-        model.addAttribute("cart",cart);
+        if (cart==null){
+            System.out.println("Hello baf giaf");
+        }else {
+            model.addAttribute("cart",cart);
+            System.out.println("Da tao");
+        }
         return "list";
     }
 
@@ -46,7 +52,7 @@ public class ProductController {
     }
 
     @GetMapping("/add/{id1}")
-    public String addProductInCart(@PathVariable Long id1, @SessionAttribute("cart") CartDto cart) {
+    public String addProductInCart(@PathVariable Long id1, @SessionAttribute(value = "cart") CartDto cart) {
         Product product = productService.findById(id1);
         ProductDto productDto = new ProductDto();
         BeanUtils.copyProperties(product, productDto);
@@ -55,7 +61,7 @@ public class ProductController {
     }
 
     @GetMapping("/decrease/{id2}")
-    public String descreaseProductInCard(@PathVariable Long id2, @SessionAttribute("cart") CartDto cart) {
+    public String descreaseProductInCard(@PathVariable Long id2, @SessionAttribute(value = "cart") CartDto cart) {
         Product product = productService.findById(id2);
         ProductDto productDto = new ProductDto();
         BeanUtils.copyProperties(product, productDto);

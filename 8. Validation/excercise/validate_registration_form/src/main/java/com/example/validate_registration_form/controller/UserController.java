@@ -20,29 +20,45 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+
     @GetMapping("/user")
     public String showList(Model model) {
         model.addAttribute("userList", userService.findAll());
-        return "/list";
+        return "list";
     }
 
     @GetMapping("/user/create")
     public String showFormCreate(Model model) {
         model.addAttribute("userDto", new UserDto());
-        return "/create";
+        return "create";
     }
 
     @PostMapping("/user/save")
     public String save(@Validated @ModelAttribute UserDto userDto, BindingResult bindingResult, RedirectAttributes attributes, Model model) {
         User user = new User();
+        new UserDto().validate(userDto, bindingResult);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("userDto", userDto);
             return "create";
-        } else {
+        }
+//        if (userService.isEmailExists(userDto.getEmail())) {
+//            model.addAttribute("userDto", userDto);
+//            bindingResult.rejectValue("email", "email", "Email is available");
+//            return "create";
+         else {
             BeanUtils.copyProperties(userDto, user);
             attributes.addFlashAttribute("msg", "Tạo mới thành công");
-            userService.save(user);
+            if (!userService.save(user)) {
+                bindingResult.rejectValue("email", "email", "Email is available");
+                return "create";
+            }
+              else {
+                attributes.addFlashAttribute("msg"," thành công");
+            }
             return "redirect:/user";
         }
+        }
     }
-}
+
+

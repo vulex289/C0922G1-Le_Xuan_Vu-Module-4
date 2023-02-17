@@ -1,2 +1,5 @@
-package DependencyInjection.main;public interface EmailService {
+package DependencyInjection.main;
+
+public interface MessageService {
+    void sendMessage(String msg);
 }

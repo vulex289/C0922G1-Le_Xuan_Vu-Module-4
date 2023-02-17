@@ -1,15 +1,23 @@
 package com.example.validate_registration_form.dto;
 
-import org.hibernate.validator.constraints.UniqueElements;
+import com.example.validate_registration_form.model.User;
+import com.example.validate_registration_form.repository.IUserRepository;
+import com.example.validate_registration_form.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Column;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Optional;
 
+//@Component
 public class UserDto implements Validator {
+
+
     private int id;
     @NotBlank(message = "Bạn phải nhập vào kí tự")
     @NotEmpty(message = "Bạn phải điền vào ô trống")
@@ -96,7 +104,12 @@ public class UserDto implements Validator {
     }
 
     @Override
-    public void validate(Object target, Errors errors) {
-
+    public void validate(Object target, Errors errors){
+//    UserDto userDto = (UserDto)target;
+//    String email = userDto.getEmail();
+////    if (userRepository.findByEmail().contains(email)){
+////        errors.rejectValue("email","phone123","Email đã tồn tại");
+////    }
     }
+
 }

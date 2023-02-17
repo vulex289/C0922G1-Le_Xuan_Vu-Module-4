@@ -1,9 +1,6 @@
 package com.example.validate_registration_form.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
@@ -14,6 +11,7 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private int age;
+    @Column(columnDefinition = "varchar(255) unique")
     private String email;
 
     public User() {

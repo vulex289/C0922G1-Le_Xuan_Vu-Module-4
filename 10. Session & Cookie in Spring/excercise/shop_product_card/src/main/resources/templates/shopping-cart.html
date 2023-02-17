@@ -70,7 +70,7 @@
         <td><a th:href="@{shop/decrease/__${cart1.key.id}__}" class="btn btn-primary">-</a></td>
         <td th:text="${cart1.key.price}"></td>
         <td th:text="${cart1.key.price*cart1.value}"></td>
-        <td><a th:href="@{shop/delete/__${cart1.key.id}__}" class="btn btn-primary">+</a></td>
+        <td><a th:href="@{shop/delete/__${cart1.key.id}__}" class="btn btn-primary">X</a></td>
     </tr>
 
 </table>

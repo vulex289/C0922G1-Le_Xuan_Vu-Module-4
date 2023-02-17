@@ -69,8 +69,12 @@
             <td th:text="${blog.date}"></td>
         <td th:text="${blog.category.name}"></td>
         <td><a th:href="@{blog/edit/__${blog.id}__}">Edit</a></td>
-        <td><a th:href="@{blog/delete/__${blog.id}__}">Delete</a></td>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                onclick=|"deleteCustomer('${blog.getId()}','${blog.getName()}')"|>
+            DELETE
+        </button>
         <td><a th:href="@{blog/detail/__${blog.id}__}">view</a></td>
+
     </tr>
     <tr>
         <td colspan="8" >
