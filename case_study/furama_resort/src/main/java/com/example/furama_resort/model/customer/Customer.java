@@ -1,52 +1,61 @@
-package com.example.furama_resort.model;
+package com.example.furama_resort.model.customer;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.furama_resort.model.contract.Contract;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "customer")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id")
-    private long customerId;
-    private String name;
-    private String dateOfBirth;
-    private int gender;
-    private int idCard;
-    private String phoneNumber;
-    private String email;
-    private String address;
-    private boolean isDelete;
-    @JoinColumn(name = "customer_id", nullable = false, referencedColumnName = "customer_id")
+    private long id;
     @ManyToOne
-    @JsonManagedReference
+    @JoinColumn(name = "customer_id", nullable = false, referencedColumnName = "id")
     private CustomerType customerType;
+    @Column(columnDefinition = "varchar(45)")
+    private String name;
+    @Column(columnDefinition = "date")
+    private String dateOfBirth;
+    @Column(columnDefinition = "bit(1)")
+    private int gender;
+    @Column(columnDefinition = "varchar(45)")
+    private String idCard;
+    @Column(columnDefinition = "varchar(45)")
+    private String phoneNumber;
+    @Column(columnDefinition = "varchar(45)")
+    private String email;
+    @Column(columnDefinition = "varchar(45)")
+    private String address;
+    @OneToMany(mappedBy = "customer")
+    private Set<Contract> contractSet;
+    private boolean isDelete;
 
     public Customer() {
     }
 
-    public Customer(long customerId, String name, String dateOfBirth, int gender, int idCard, String phoneNumber, String email, String address, boolean isDelete, CustomerType customerType) {
-        this.customerId = customerId;
-        this.name = name;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.idCard = idCard;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.isDelete = isDelete;
+    public Set<Contract> getContractSet() {
+        return contractSet;
+    }
+
+    public void setContractSet(Set<Contract> contractSet) {
+        this.contractSet = contractSet;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public CustomerType getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(CustomerType customerType) {
         this.customerType = customerType;
-    }
-
-    public long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
     }
 
     public String getName() {
@@ -73,11 +82,11 @@ public class Customer {
         this.gender = gender;
     }
 
-    public int getIdCard() {
+    public String getIdCard() {
         return idCard;
     }
 
-    public void setIdCard(int idCard) {
+    public void setIdCard(String idCard) {
         this.idCard = idCard;
     }
 
@@ -111,13 +120,5 @@ public class Customer {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
-    }
-
-    public CustomerType getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(CustomerType customerType) {
-        this.customerType = customerType;
     }
 }

@@ -1,6 +1,7 @@
-package com.example.furama_resort.model;
+package com.example.furama_resort.model.facility;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.example.furama_resort.model.facility.Facility;
+
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,27 +11,37 @@ import java.util.Set;
 public class FacilityType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "facility_type_id")
-    private long facilityTypeId;
+    private long id;
+    @Column(columnDefinition = "varchar(45)")
     private String name;
     @OneToMany(mappedBy = "facilityType")
-    @JsonBackReference
     private Set<Facility> facilitySet;
+    private boolean isDelete;
+
     public FacilityType() {
     }
 
-    public FacilityType(long facilityTypeId, String name, Set<Facility> facilitySet) {
-        this.facilityTypeId = facilityTypeId;
+    public FacilityType(long id, String name, Set<Facility> facilitySet, boolean isDelete) {
+        this.id = id;
         this.name = name;
         this.facilitySet = facilitySet;
+        this.isDelete = isDelete;
     }
 
-    public long getFacilityTypeId() {
-        return facilityTypeId;
+    public long getId() {
+        return id;
     }
 
-    public void setFacilityTypeId(long facilityTypeId) {
-        this.facilityTypeId = facilityTypeId;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 
     public String getName() {
