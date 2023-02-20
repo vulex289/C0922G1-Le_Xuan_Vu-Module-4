@@ -11,7 +11,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "customer_type_id", nullable = false, referencedColumnName = "id")
     private CustomerType customerType;
     @Column(columnDefinition = "varchar(45)")
     private String name;

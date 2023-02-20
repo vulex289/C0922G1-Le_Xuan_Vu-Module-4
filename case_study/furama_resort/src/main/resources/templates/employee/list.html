@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/home::head">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="../../static/bootstrap-5.3.0-alpha1-dist/static/jquery-3.6.3.min.js"></script>
+</head>
+<body>
+<div th:replace="~{/home::nav}"></div>
+<span th:text="${msg}" style="color:red;"></span>
+<h1 class="text-center my-3">LIST EMPLOYEE </h1>
+<div class="row my-1">
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
+        <form class="d-flex mx-3" role="search">
+            <input class="form-control me-2" name="nameSearch" type="search" placeholder="nameSearch"
+                   aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create">ADD NEW EMPLOYEE</button>
+
+<table class="table table-striped table-bordered text-center" style="width:100%" id="furama">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Date_Of_Birth</th>
+        <th scope="col">Id_Card</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Email</th>
+        <th scope="col">Education_degree</th>
+        <th scope="col">Position</th>
+        <th scope="col">Division</th>
+        <th scope="col">Salary</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    <tr th:each="employee: ${employees}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.name}"></td>
+        <td th:text="${employee.dateOfBirth}"></td>
+        <td th:text="${employee.idCard}"></td>
+        <td th:text="${employee.phoneNumber}"></td>
+        <td th:text="${employee.email}"></td>
+        <td th:text="${employee.educationDegree.name}"></td>
+        <td th:text="${employee.position.name}"></td>
+        <td th:text="${employee.division.name}"></td>
+        <td th:text="${employee.salary}"></td>
+        <td>
+            <button data-bs-toggle="modal" data-bs-target="#edit" type="button" class="btn btn-warning"
+                    th:attr="onclick=|editEmployee('${employee.id}','${employee.name}','${employee.dateOfBirth}',
+                        '${employee.idCard}','${employee.phoneNumber}','${employee.email}','${employee.educationDegree.id}',
+                        '${employee.division.id}','${employee.position.id}','${employee.salary}')|">
+                <img src="https://img.icons8.com/ios-glyphs/1x/edit.png">
+            </button>
+        </td>
+        <td>
+            <!-- Button trigger modal xoa-->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#remove"
+                    th:attr="onclick=|deleteEmployee('${employee.id}','${employee.name}')|">
+                <img src="https://img.icons8.com/ios-glyphs/1x/delete-forever.png">
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<!--------------------------------THÊM--------------------------------->
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" th:action="@{/employee/create}" th:object="${employee}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">NEW EMPLOYEE</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" th:field="*{id}" hidden>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Tên Nhân Viên:</label>
+                        <input type="text" class="form-control" th:field="*{name}" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Ngày Sinh</label>
+                        <input type="date" th:min="${minAge}" th:max="${maxAge}" class="form-control"
+                               th:field="*{dateOfBirth}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">CMND</label>
+                        <input required type="text" class="form-control" th:field="*{idCard}">
+                        <!--                <span style="color: red" id="errorCMND"></span>-->
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" th:field="*{phoneNumber}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Email</label>
+                        <input type="text" class="form-control" th:field="*{email}">
+                        <!--                <span id="errorEmail" style="color: red"></span>-->
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Học Vấn</label>
+                        <select class="form-select" aria-label="Default select example" th:field="*{educationDegree}">
+                            <option th:each="e: ${educationDegrees}" th:value="${e.id}" th:text="${e.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Vị Trí</label>
+                        <select class="form-select" aria-label="Default select example" th:field="*{position}">
+                            <option th:each="e: ${positions}" th:value="${e.id}" th:text="${e.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bộ Phận</label>
+                        <select class="form-select" aria-label="Default select example" th:field="*{division}">
+                            <option th:each="e: ${divisions}" th:value="${e.id}" th:text="${e.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Lương</label>
+                        <input type="text" class="form-control" th:field="*{salary}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-primary">SAVE</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--------------------------------------------XÓA------------------------------------->
+<div class="modal fade" id="remove" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" th:action="@{/employee/delete}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">DELETE EMPLOYEE</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="idDelete" hidden id="idDelete">
+                    <strong>Customer: </strong>
+                    <span id="nameDelete" class="text-danger"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-----------------------------------------------------------SỬA--------------------------------------------------------->
+<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" th:action="@{/employee/edit}" th:object="${employee1}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">EDIT EMPLOYEE</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" th:field="*{id}" hidden id="newId">
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Tên Nhân Viên:</label>
+                        <input type="text" class="form-control" th:field="*{name}" id="newName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Ngày Sinh</label>
+                        <input type="date" th:min="${minAge}" th:max="${maxAge}" class="form-control"
+                               th:field="*{dateOfBirth}" id="newBirthday">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">CMND</label>
+                        <input required type="text" class="form-control" id="newIdCard" th:field="*{idCard}">
+                        <!--                <span style="color: red" id="errorCMND"></span>-->
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="newPhone" th:field="*{phoneNumber}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Email</label>
+                        <input type="text" class="form-control" id="newEmail" th:field="*{email}">
+                        <!--                <span id="errorEmail" style="color: red"></span>-->
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Học Vấn</label>
+                        <select class="form-select" aria-label="Default select example" th:field="*{educationDegree}">
+                            <option th:each="e: ${educationDegrees}" id="newEdu" th:value="${e.id}"
+                                    th:text="${e.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Vị Trí</label>
+                        <select class="form-select" aria-label="Default select example" th:field="*{position}">
+                            <option th:each="e: ${positions}" id="newPosition" th:value="${e.id}"
+                                    th:text="${e.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bộ Phận</label>
+                        <select class="form-select" aria-label="Default select example" th:field="*{division}">
+                            <option id="newDivision" th:each="e: ${divisions}" th:value="${e.id}"
+                                    th:text="${e.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Lương</label>
+                        <input type="text" id="newSalary" class="form-control" th:field="*{salary}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-primary">SAVE</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a th:href="@{/furama/employee(page=${employees.number - 1},nameSearch=${nameSearch})}"
+       th:if="${employees.hasPrevious()}">
+        <button type="button" class="btn btn-primary">Previous</button>
+    </a>
+    <span th:text="${employees.number+1}"></span>/<span th:text="${employees.totalPages}"></span>
+    <a th:href="@{/furama/employee(page=${employees.number + 1},nameSearch=${nameSearch})}"
+       th:if="${employees.hasNext()}">
+        <button type="button" class="btn btn-primary">Next</button>
+    </a>
+</div>
+<div th:replace="~{/home::footer}"></div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        $('.modal').on('hidden.bs.modal', function () {
+            $(this).find('form')[0].reset();
+        });
+    });
+    $('.modal').on('hide.bs.modal', function () {
+        $('.input-field').val('');
+    });
+
+    function deleteEmployee(id, name) {
+        document.getElementById("idDelete").value = id;
+        document.getElementById("nameDelete").innerText = name;
+    }
+
+    function editEmployee(id, name, dateOfBirth, idCard, phone, email, edu, position, division, salary) {
+        document.getElementById('newId').value = id;
+        document.getElementById('newName').value = name;
+        document.getElementById('newBirthday').value = dateOfBirth;
+        document.getElementById('newIdCard').value = idCard;
+        document.getElementById('newPhone').value = phone;
+        document.getElementById('newEmail').value = email;
+        document.getElementById('newEdu').value = edu;
+        document.getElementById('newPosition').value = position;
+        document.getElementById('newDivision').value = division;
+        document.getElementById('newSalary').value = salary;
+    }
+</script>
+</html>
