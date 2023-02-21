@@ -7,10 +7,9 @@ import java.util.Set;
 @Table(name = "customer_type")
 public class CustomerType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(columnDefinition = "varchar(45)")
+    @Column(columnDefinition = "varchar(45) unique")
     private String name;
     @OneToMany(mappedBy = "customerType")
 

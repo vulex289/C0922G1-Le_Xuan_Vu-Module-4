@@ -10,10 +10,8 @@ import java.util.Set;
 @Table(name = "rent_type")
 public class RentType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private long id;
-    @Column(columnDefinition = "varchar(45)")
+    @Column(columnDefinition = "varchar(45) unique")
     private String name;
     @OneToMany(mappedBy = "rentType")
     @JsonBackReference

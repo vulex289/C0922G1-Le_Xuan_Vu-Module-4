@@ -10,9 +10,8 @@ import java.util.Set;
 @Table(name = "facility_type")
 public class FacilityType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(columnDefinition = "varchar(45)")
+    @Column(columnDefinition = "varchar(45) unique")
     private String name;
     @OneToMany(mappedBy = "facilityType")
     private Set<Facility> facilitySet;

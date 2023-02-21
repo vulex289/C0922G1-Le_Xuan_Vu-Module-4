@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
 @Service
 public class CustomerService implements ICustomerService {
     @Autowired
@@ -18,7 +19,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Page<Customer> findAll(String name, String email, String customerTypeId, Pageable pageable) {
-        return customerRepository.findAll(name,email,customerTypeId,pageable);
+        return customerRepository.findAll(name, email, customerTypeId, pageable);
     }
 
     @Override
@@ -40,7 +41,8 @@ public class CustomerService implements ICustomerService {
     public void edit(Customer customer) {
         customerRepository.save(customer);
     }
-@Transactional
+
+    @Transactional
     @Override
     public void deleteLogic(long id) {
         customerRepository.deleteLogic(id);

@@ -9,7 +9,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long roleId;
-    @Column(columnDefinition = "varchar(255)")
+    @Column(columnDefinition = "varchar(255) unique")
     private String name;
     @ManyToMany(mappedBy = "roles")
     private Set<User> userSet;

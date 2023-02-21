@@ -1,6 +1,7 @@
 package com.example.furama_resort.model.security;
 
 import com.example.furama_resort.model.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,13 +10,14 @@ import java.util.Set;
 @Entity
 public class User {
     @Id
-    @Column(columnDefinition = "varchar(255)")
-    private String userName;
+    @Column(columnDefinition = "varchar(255) unique")
+    private String username;
+    @JsonIgnore
     @Column(columnDefinition = "varchar(255)")
     private String password;
     private boolean isDelete;
     @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "username"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     @OneToOne(mappedBy = "user")
     private Employee employee;
@@ -39,12 +41,12 @@ public class User {
     public User() {
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

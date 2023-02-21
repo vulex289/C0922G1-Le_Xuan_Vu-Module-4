@@ -3,6 +3,7 @@ package com.example.furama_resort.model.customer;
 import com.example.furama_resort.model.contract.Contract;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.util.Set;
 
 @Entity
@@ -19,11 +20,11 @@ public class Customer {
     private String dateOfBirth;
     @Column(columnDefinition = "bit(1)")
     private int gender;
-    @Column(columnDefinition = "varchar(45)")
+    @Column(columnDefinition = "varchar(45) unique")
     private String idCard;
-    @Column(columnDefinition = "varchar(45)")
+    @Column(columnDefinition = "varchar(45) unique")
     private String phoneNumber;
-    @Column(columnDefinition = "varchar(45)")
+    @Column(columnDefinition = "varchar(45) unique")
     private String email;
     @Column(columnDefinition = "varchar(45)")
     private String address;

@@ -4,8 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="../../static/bootstrap-5.3.0-alpha1-dist/static/jquery-3.6.3.min.js"></script>
+
 </head>
 <body>
 <div th:replace="~{/home::nav}"></div>
@@ -15,7 +14,7 @@
     <div class="col-md-6"></div>
     <div class="col-md-6">
         <form class="d-flex mx-3" role="search">
-            <input class="form-control me-2" name="nameSearch" type="search" placeholder="nameSearch"
+            <input class="form-control me-2" name="nameSearch" th:action="@{/furama/employee}" type="search" placeholder="nameSearch"
                    aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
@@ -242,11 +241,11 @@
 </body>
 
 <script>
-    $(document).ready(function () {
-        $('.modal').on('hidden.bs.modal', function () {
-            $(this).find('form')[0].reset();
-        });
-    });
+    // $(document).ready(function () {
+    //     $('.modal').on('hidden.bs.modal', function () {
+    //         $(this).find('form')[0].reset();
+    //     });
+    // });
     $('.modal').on('hide.bs.modal', function () {
         $('.input-field').val('');
     });

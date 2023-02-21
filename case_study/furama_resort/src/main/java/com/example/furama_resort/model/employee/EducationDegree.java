@@ -6,9 +6,8 @@ import java.util.Set;
 @Entity
 public class EducationDegree {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(columnDefinition = "varchar(45)")
+    @Column(columnDefinition = "varchar(45) unique")
     private String name;
     private boolean isDelete;
     @OneToMany(mappedBy = "educationDegree")
