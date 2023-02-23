@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class EmployeeService implements IEmployeeService {
     @Autowired
@@ -36,6 +38,11 @@ public class EmployeeService implements IEmployeeService {
     @Override
     public void deleteById(long id) {
         employeeRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
     }
 
     public static interface IEmployeeService {

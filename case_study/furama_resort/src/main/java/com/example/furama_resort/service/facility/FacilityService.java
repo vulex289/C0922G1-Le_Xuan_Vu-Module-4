@@ -8,33 +8,57 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
-public class FacilityService implements IFacilityService{
+public class FacilityService implements IFacilityService {
     @Autowired
     private IFacilityRepository facilityRepository;
+
     @Override
-    public Page<Facility> findAll(String nameSearch, String facilityType, Pageable pageable) {
-        return facilityRepository.findAll(nameSearch,facilityType,pageable);
+    public Page<Facility> getAllByNameSearch(String nameSearch, Pageable pageable) {
+        return facilityRepository.getAllByNameSearch(nameSearch, pageable);
     }
-@Transactional
+
+    @Override
+    public Page<Facility> getAllByNameSearchAndFacilityType(String nameSearch, long facilityType, Pageable pageable) {
+        return facilityRepository.getAllByNameSearchAndFacilityType(nameSearch, facilityType, pageable);
+    }
+
+    @Transactional
     @Override
     public void deleteLogic(long id) {
-    facilityRepository.deleteLogic(id);
+        facilityRepository.deleteLogic(id);
     }
 
     @Override
-    public void save(Facility facility) {
-    facilityRepository.save(facility);
+    public boolean save(Facility facility) {
+        if (facilityRepository.findById(facility.getId()).isPresent()) {
+            return false;
+        } else {
+            facilityRepository.save(facility);
+            return true;
+        }
     }
 
     @Override
-    public void edit(Facility facility) {
-    facilityRepository.save(facility);
+    public boolean edit(Facility facility) {
+        if (!facilityRepository.findById(facility.getId()).isPresent()) {
+            return false;
+        } else {
+            facilityRepository.save(facility);
+            return true;
+        }
     }
 
     @Override
     public void findById(long id) {
-    facilityRepository.findById(id).orElse(null);
+        facilityRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<Facility> findAll() {
+        return facilityRepository.findAll();
+    }
+
 }

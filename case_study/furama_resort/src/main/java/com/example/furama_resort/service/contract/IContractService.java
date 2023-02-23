@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface IContractService {
     List<IContractDto> getAllContracts();
-    void save(Contract contract);
+    Contract save(Contract contract);
 }

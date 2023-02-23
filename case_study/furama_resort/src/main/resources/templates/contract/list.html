@@ -10,9 +10,9 @@
 <span th:text="${msg}" style="color:red;"></span>
 <h1 class="text-center my-3">LIST CONTRACT</h1>
 
-<a th:href="@{/customer/create}">
-    <button class="btn btn-primary">ADD NEW CUSTOMER</button>
-</a>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDetailContract"
+        data-bs-whatever="@mdo">ADD NEW CONTRACT
+</button>
 <table class="table table-striped table-bordered text-center" style="width:100%" id="furama">
     <thead>
     <tr>
@@ -36,7 +36,8 @@
         <td th:text="${stt.deposit}"></td>
         <td th:text="${stt.total}"></td>
         <td>
-            <button type="button"  th:attr="onclick=|getInfoContract('${stt.contractId}')|" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAttachFacility"
+            <button type="button" th:attr="onclick=|getInfoContract('${stt.contractId}')|" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#addAttachFacility"
                     data-bs-whatever="@mdo">+
             </button>
             <button type="button" th:attr="onclick=|getInfoAttachDetail('${stt.contractId}')|" class="btn btn-primary"
@@ -50,86 +51,115 @@
 <!-- Modal -->
 <div class="modal fade" id="addDetailContract" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add detail contract</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form class="vh-100">
+        <form class="vh-100" method="post" th:object="${contract}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add detail contract</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" th:field="*{id}" id="newContractId" hidden>
                     <div class="mb-3">
                         <label class="form-label">Start date</label>
-                        <input type="text" class="form-control">
+                        <input th:field="*{startDate}" type="date" id="newStartDate" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">End date</label>
-                        <input type="text" class="form-control">
+                        <input type="date" th:field="*{endDate}" id="newEndDate" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Deposit</label>
-                        <input type="text" class="form-control">
+                        <input th:field="*{deposit}" type="number" id="newDeposit" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Total</label>
-                        <input class="form-control" type="text" aria-label="Disabled input example" disabled readonly>
+                        <input class="form-control" id="newTotal" type="text" aria-label="Disabled input example"
+                               readonly>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Customer</label>
-                        <select class="form-select" aria-label="Default select example">
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                        <select id="newCustomer" th:field="*{customer}" class="form-select"
+                                aria-label="Default select example">
+                            <option th:each="cus:${customers}" th:value="${cus.id}" th:text="${cus.name}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Service</label>
-                        <select class="form-select" aria-label="Default select example">
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                        <label class="form-label">Facility</label>
+                        <select id="newFacility" th:field="*{facility}" class="form-select"
+                                aria-label="Default select example">
+                            <option th:each="fac:${facilities}" th:value="${fac.id}" th:data-cost="${fac.cost}"
+                                    th:text="${fac.name}"></option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Employee</label>
+                        <select id="newEmployee" th:field="*{employee}" class="form-select"
+                                aria-label="Default select example">
+                            <option th:each="e:${employees}" th:value="${e.id}" th:text="${e.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="tableAttachFacility">
+                        <table class=" table table-striped table-bordered text-center">
+                            <thead>
+                            <tr>
+                                <th class='text-center' scope="col">STT</th>
+                                <th class='text-center' scope="col">Attach facility</th>
+                                <th class='text-center' scope="col">Quantity</th>
+                                <th class='text-center' scope="col">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody id="attachFacilityTable">
+                            <tr>
+                                <td class='text-center' colspan="4">Danh Sách Trống</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Attach facility</label>
                         <button type="button" class="btn btn-light" data-bs-toggle="modal"
-                                data-bs-target="#addAttachFacility">
+                                data-bs-target="#AttachFacility">
                             <img src="https://img.icons8.com/offices/30/null/plus-2-math.png"/>
                         </button>
                     </div>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="addContract()">Save
+                        changes
+                    </button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
+            >
+        </form>
     </div>
 </div>
+<!---------------------------------Thêm mới dịch vụ đi kèm------------------------------>
 <div class="modal fade" id="addAttachFacility" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add attach facility</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form th:action="@{furama/createContractDetail}"th:object="${contractDetail}">
-
-                    <select th:field="*{id}" class="form-select" aria-label="Default select example">
-                        <option value="${attachFacility.id}">${attachFacility.name}</option>
+        <form th:action="@{/createContractDetail}" method="post" th:object="${contractDetail}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add attach facility</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="number" th:field="*{id}" hidden>
+                    <select th:field="*{attachFacility}" class="form-select" aria-label="Default select example">
+                        <option th:each="att:${attachFacilities}" th:value="${att.id}" th:text="${att.name}"></option>
                     </select>
-
                     <div class="mb-3">
                         <label class="form-label">Quantity</label>
-                        <input type="number" class="form-control">
+                        <input th:field="*{quantity}" type="number" class="form-control">
                     </div>
-                </form>
+                    <input id="contractId" th:field="*{contract}" hidden type="number" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 <!---------------------------showAttach-Detail---------------------------------->
@@ -152,19 +182,52 @@
     </div>
 </div>
 
+<!---------------------------------Thêm mới dịch vụ đi kèm-Contract------------------------------>
+<div class="modal fade" id="AttachFacility" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" th:object="${contractDetail}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add attach facility</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="md-3">
+                        <select th:field="*{attachFacility}" id="idAttachFacility" class="form-select"
+                                aria-label="Default select example">
+                            <option th:each="attachFacility:${attachFacilities}" th:value="${attachFacility.id}"
+                                    th:data-cost="${attachFacility.cost}" th:text="${attachFacility.name}"
+                                    th:id="${'name_' + attachFacility.id}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input id="newQuantity" type="number" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="addContract" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <div th:replace="~{/home::footer}"></div>
 </body>
 <script>
+    function getInfoContract(id) {
+        document.getElementById("contractId").value = id;
+    }
+
     function getInfoAttachDetail(id) {
         $("#show").show();
         $("#showAttach").empty();
-        debugger
         $.ajax({
             url: "http://localhost:8080/api/contract/" + id,
             type: "GET",
             dataType: "json",
             success: function (data) {
-                debugger
                 if (data.length > 0) {
                     $("#show").hide();
                     let tr = [];
@@ -185,10 +248,161 @@
                         tr.push("</tr>");
                     }
                     $("#showAttach").html(tr.join(""));
-                    $("#showAttach").fadeIn(4000);
                 }
             }
         })
     }
+
+    class AttachFacility {
+        getAttachFacilityId() {
+            return this.attachFacilityId;
+        }
+
+        setAttachFacilityId(value) {
+            this.attachFacilityId = value;
+        }
+
+        getQuantity() {
+            return this.quantity;
+        }
+
+        setQuantity(value) {
+            this.quantity = value;
+        }
+
+        getAttachFacilityName() {
+            return this.attachFacilityName;
+        }
+
+        setAttachFacilityName(value) {
+            this.attachFacilityName = value;
+        }
+
+        constructor(attachFacilityId, name, quantity) {
+            this.attachFacilityId = attachFacilityId;
+            this.attachFacilityName = name;
+            this.quantity = quantity;
+        }
+    }
+debugger
+    let attachFacilityArr = []
+    $('#addContract').click(function () {
+        $(document).ready(function () {
+            $('#AttachFacility').modal('hide');
+        })
+        let attachFacilityId = document.getElementById("idAttachFacility").value;
+        let quantity = document.getElementById("newQuantity").value;
+        let attachFacilityName = $(`#name_${attachFacilityId}`).text();
+        attachFacility = new AttachFacility(attachFacilityId, attachFacilityName, quantity)
+        attachFacilityArr.push(attachFacility)
+        showAllAttachFacility()
+    })
+
+    function showAllAttachFacility() {
+        let table = "";
+        debugger
+        for (let i = 0; i < attachFacilityArr.length; i++) {
+            table += `"<tr>"+"<td class='text-primary text-center'>${i + 1}</td>"+"<td class='text-primary text-center'>${attachFacilityArr[i].attachFacilityName}</td>
+"+"<td class='text-primary text-center'>${attachFacilityArr[i].quantity}</td>"+"<td> <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#remove"
+                    onclick="deleteFacility('${i}')">
+                <img src="https://img.icons8.com/ios-glyphs/1x/delete-forever.png">
+            </button></td>"+"</tr>"`;
+        }
+
+        $('#attachFacilityTable').html(table);
+    }
+
+    $('#addDetailContract').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+        // $('#attachFacilityTable').html('');
+    })
+
+    function addContract() {
+        let contractAndAttachFacility = []
+        let startDateValue = document.getElementById("newStartDate").value;
+        let endDateValue = document.getElementById("newEndDate").value;
+        let customerId = document.getElementById("newCustomer").value;
+        let employeeId = document.getElementById("newEmployee").value;
+        let facilityId = document.getElementById("newFacility").value;
+        let deposit = document.getElementById("newDeposit").value;
+        let customer = {
+            id: customerId
+        }
+        let employee = {
+            id: employeeId
+        }
+        let facility = {
+            id: facilityId
+        }
+        let contract = {
+            startDate: startDateValue,
+            endDate: endDateValue,
+            customer: customer,
+            employee: employee,
+            facility: facility,
+            deposit: deposit
+        }
+        debugger
+        if (attachFacilityArr.length > 0) {
+            for (let i = 0; i < attachFacilityArr.length; i++) {
+                let newAttachFacility = {
+                    id: attachFacilityArr[i].attachFacilityId,
+                    name: attachFacilityArr[i].attachFacilityName
+                }
+                let newContractDetail = {
+                    contract: contract,
+                    attachFacility: newAttachFacility,
+                    quantity: attachFacilityArr[i].quantity
+                }
+                contractAndAttachFacility.push(newContractDetail)
+            }
+        } else {
+            let newContractDetail = {
+                contract: contract
+            }
+            contractAndAttachFacility.push(newContractDetail)
+        }
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "POST",
+            data: JSON.stringify(contractAndAttachFacility),
+            url: "http://localhost:8080/api/contract/create",
+            success: function (data) {
+                window.location.reload();
+            },
+        })
+    }
+
+    function deleteFacility(id) {
+        attachFacilityArr.splice(id, 1);
+        showAllAttachFacility();
+    }
+
+    $(document).ready(function () {
+        // Lắng nghe sự kiện input trên các ô input
+        $('#newStartDate, #newEndDate, #newDeposit, #newFacility,#newQuantity,#idAttachFacility').on('input', function () {
+            debugger
+            // Lấy giá trị của các ô input
+            let startDate = new Date($('#newStartDate').val());
+            let endDate = new Date($('#newEndDate').val());
+            let deposit = parseInt($('#newDeposit').val());
+            let facilityCost = parseInt($('#newFacility option:selected').data('cost'));
+            let quantity = parseInt($('#newQuantity').val());
+            let attachFacilityCost = parseInt($('#idAttachFacility option:selected').data('cost'));
+
+            // Tính toán số ngày thuê
+            let days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+            // Tính toán tổng tiền
+            let total = days * facilityCost + quantity * attachFacilityCost - deposit;
+
+            // Gán giá trị cho ô input Total
+            $('#newTotal').val(total);
+        });
+    });
+
 </script>
 </html>

@@ -5,10 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface IFacilityService {
-    Page<Facility> findAll(String nameSearch, String facilityType, Pageable pageable);
+    Page<Facility> getAllByNameSearch(String nameSearch, Pageable pageable);
+    Page<Facility> getAllByNameSearchAndFacilityType(String nameSearch, long facilityType, Pageable pageable);
     void deleteLogic(long id);
-    void save(Facility facility);
-    void edit(Facility facility);
+    boolean save(Facility facility);
+    boolean edit(Facility facility);
     void findById(long id);
+    List<Facility> findAll();
 }

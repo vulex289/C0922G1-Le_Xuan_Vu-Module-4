@@ -1,7 +1,6 @@
 package com.example.furama_resort.model.security;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity

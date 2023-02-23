@@ -1,18 +1,18 @@
 package com.example.furama_resort.service.customer;
-
 import com.example.furama_resort.model.customer.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
+
 
 import java.util.List;
 
 public interface ICustomerService {
-    Page<Customer>findAll(String name,  String email, String customerTypeId, Pageable pageable);
+    Page<Customer>findAll(String name,  String email, long customerTypeId, Pageable pageable);
+    Page<Customer>findAllAndSearchNotCustomerType(String name,  String email, Pageable pageable);
     List<Customer> findAll();
-    void save(Customer customer);
+    boolean save(Customer customer);
     Customer findById(long id);
-    void edit(Customer customer);
+    boolean edit(Customer customer);
     void deleteLogic(long id);
     void delete(Customer customer);
 }

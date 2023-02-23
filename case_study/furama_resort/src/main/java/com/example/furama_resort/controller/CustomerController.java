@@ -4,6 +4,7 @@ import com.example.furama_resort.model.customer.Customer;
 import com.example.furama_resort.service.customer.ICustomerService;
 import com.example.furama_resort.service.customer.ICustomerTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,14 +23,20 @@ public class CustomerController {
     private ICustomerTypeService customerTypeService;
 
     @GetMapping("/furama/customer")
-    public String showList(Model model, @RequestParam(defaultValue = "", required = false) String nameSearch, @RequestParam(defaultValue = "", required = false) String email, @RequestParam(defaultValue = "", required = false) String customerTypeId, @PageableDefault(page = 0, size = 4, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    public String showList(Model model, @RequestParam(defaultValue = "", required = false) String nameSearch, @RequestParam(defaultValue = "", required = false) String email, @RequestParam(defaultValue = "-1", required = false) long customerTypeId, @PageableDefault(page = 0, size = 4, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         for (Customer customer : customerService.findAll()) {
             if (customer.getDateOfBirth().contains("-")) {
                 String[] arr = customer.getDateOfBirth().split("-");
                 customer.setDateOfBirth(arr[2] + "-" + arr[1] + "-" + arr[0]);
             }
         }
-        model.addAttribute("customers", customerService.findAll(nameSearch, email, customerTypeId, pageable));
+        Page<Customer> customers;
+        if (customerTypeId == -1) {
+            customers = customerService.findAllAndSearchNotCustomerType(nameSearch, email, pageable);
+        } else {
+            customers = customerService.findAll(nameSearch, email, customerTypeId, pageable);
+        }
+        model.addAttribute("customers", customers);
         model.addAttribute("nameSearch", nameSearch);
         model.addAttribute("email", email);
         model.addAttribute("customerTypeId", customerTypeId);
@@ -40,11 +47,11 @@ public class CustomerController {
     @GetMapping("/furama/customer1")
     public String showList2(Model model) {
         model.addAttribute("customers", customerService.findAll());
-        model.addAttribute("customerTypeList",customerTypeService.findAll());
+        model.addAttribute("customerTypeList", customerTypeService.findAll());
         return "customer/list1";
     }
 
-    @GetMapping("customer/create")
+    @GetMapping("/customer/create")
     public String showFormCreate(Model model) {
         model.addAttribute("customer", new Customer());
         LocalDate minAge = LocalDate.now().minusYears(70);
@@ -57,9 +64,14 @@ public class CustomerController {
 
     @PostMapping("customer/create")
     public String save(Model model, @ModelAttribute Customer customer) {
-        customerService.save(customer);
-        model.addAttribute("msg", "Thêm mới thành công");
-        return "customer/create";
+        boolean check = customerService.save(customer);
+        if (!check) {
+            model.addAttribute("msg", "Thêm mới thành công");
+            return "/customer/create";
+        } else {
+            model.addAttribute("msg", "Không Thành Công");
+            return "redirect:/customer/create";
+        }
     }
 
     @GetMapping("customer/edit/{id}")
@@ -76,21 +88,27 @@ public class CustomerController {
 
     @PostMapping("customer/edit")
     public String edit(@ModelAttribute Customer customer, RedirectAttributes attributes) {
-        customerService.edit(customer);
-        attributes.addFlashAttribute("msg", "Sửa thành công");
-        return "redirect:/furama/customer1";
+        boolean check = customerService.edit(customer);
+        if (check) {
+            attributes.addFlashAttribute("msg", "Sửa thành công");
+            return "redirect:/furama/customer1";
+        } else {
+            attributes.addFlashAttribute("msg", "Không Sửa thành công");
+            return "redirect:/furama/customer1";
+        }
     }
 
-    @PostMapping ("customer/delete")
-    public String deleteLogic(@RequestParam long idDelete,RedirectAttributes attributes) {
+    @PostMapping("customer/delete")
+    public String deleteLogic(@RequestParam long idDelete, RedirectAttributes attributes) {
         customerService.deleteLogic(idDelete);
-        attributes.addFlashAttribute("msg","Xóa thành công");
+        attributes.addFlashAttribute("msg", "Xóa thành công");
         return "redirect:/furama/customer";
     }
-    @PostMapping ("customer/delete1")
-    public String remove(@RequestParam long idDelete,RedirectAttributes attributes) {
+
+    @PostMapping("customer/delete1")
+    public String remove(@RequestParam long idDelete, RedirectAttributes attributes) {
         customerService.delete(customerService.findById(idDelete));
-        attributes.addFlashAttribute("msg","Xóa thành công");
+        attributes.addFlashAttribute("msg", "Xóa thành công");
         return "redirect:/furama/customer1";
     }
 }

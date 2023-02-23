@@ -13,14 +13,19 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 
-public interface ICustomerRepository extends JpaRepository<Customer,Long> {
+public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
-    @Query(value=" select * from customer where is_delete=false and name like concat('%',:nameSearch,'%' ) and email like concat('%',:email,'%') and customer_type_id like concat('%',:param,'%')",nativeQuery = true)
-    Page<Customer>findAll(@Param("nameSearch") String name,@Param("email") String email,@Param("param") String customerTypeId, Pageable pageable);
+    @Query(value = " select * from customer where is_delete=false and name like concat('%',:nameSearch,'%' ) and email like concat('%',:email,'%') and customer_type_id =:param", nativeQuery = true)
+    Page<Customer> findAll(@Param("nameSearch") String name, @Param("email") String email, @Param("param") long customerTypeId, Pageable pageable);
+
     @Modifying
-    @Query(value = "update customer set is_delete=true where id=:paramId",nativeQuery = true)
+    @Query(value = "update customer set is_delete=true where id=:paramId", nativeQuery = true)
     void deleteLogic(@Param("paramId") long id);
-    @Query(value = "select * from customer ",nativeQuery = true)
+
+    @Query(value = "select * from customer ", nativeQuery = true)
     List<Customer> findAll();
+
+    @Query(value = "select * from customer where is_delete = false and name like concat('%',:nameSearch,'%') " + "and email like concat('%',:email,'%')", nativeQuery = true)
+    Page<Customer> findAllAndSearchNotCustomerType(@Param("nameSearch") String nameSearch, @Param("email") String email,Pageable pageable);
 
 }

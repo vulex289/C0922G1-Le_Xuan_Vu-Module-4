@@ -17,10 +17,17 @@ public class CustomerService implements ICustomerService {
     @Autowired
     private ICustomerRepository customerRepository;
 
+
     @Override
-    public Page<Customer> findAll(String name, String email, String customerTypeId, Pageable pageable) {
-        return customerRepository.findAll(name, email, customerTypeId, pageable);
+    public Page<Customer> findAll(String name, String email, long customerTypeId, Pageable pageable) {
+        return customerRepository.findAll(name,email,customerTypeId,pageable);
     }
+
+    @Override
+    public Page<Customer> findAllAndSearchNotCustomerType(String name, String email,Pageable pageable) {
+        return customerRepository.findAllAndSearchNotCustomerType(name,email,pageable);
+    }
+
 
     @Override
     public List<Customer> findAll() {
@@ -28,9 +35,16 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public void save(Customer customer) {
+    public boolean save(Customer customer) {
+        for (Customer customer1 : customerRepository.findAll()) {
+            if (customer1.getId() == customer.getId()) {
+                return false;
+            }
+        }
         customerRepository.save(customer);
+        return true;
     }
+
 
     @Override
     public Customer findById(long id) {
@@ -38,8 +52,13 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public void edit(Customer customer) {
-        customerRepository.save(customer);
+    public boolean edit(Customer customer) {
+        if (!customerRepository.findById(customer.getId()).isPresent()){
+            return false;
+        }else {
+            customerRepository.save(customer);
+            return true;
+        }
     }
 
     @Transactional
