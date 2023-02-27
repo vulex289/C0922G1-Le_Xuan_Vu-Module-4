@@ -1,15 +1,18 @@
 package com.example.furama_resort.controller;
-
+import com.example.furama_resort.dto.FacilityDto;
 import com.example.furama_resort.model.facility.Facility;
 import com.example.furama_resort.service.facility.IFacilityService;
 import com.example.furama_resort.service.facility.IFacilityTypeService;
 import com.example.furama_resort.service.facility.IRentTypeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,20 +29,34 @@ public class FacilityController {
     private IRentTypeService rentTypeService;
 
     @GetMapping("/furama/facility")
-    public String showList(Model model, @RequestParam(defaultValue = "", required = false) String nameSearch, @RequestParam(defaultValue = "-1", required = false) long facilityTypeId, @PageableDefault(size = 4, page = 0) Pageable pageable) {
-        Page<Facility>facilities;
-        if (facilityTypeId==-1){
-            facilities = facilityService.getAllByNameSearch(nameSearch,pageable);
-        }
-        else {
-            facilities = facilityService.getAllByNameSearchAndFacilityType(nameSearch,facilityTypeId,pageable);
+    public String showList(Model model, @RequestParam(defaultValue = "", required = false) String nameSearch,
+                           @RequestParam(defaultValue = "-1", required = false) long facilityTypeId,
+                           @PageableDefault(size = 4, page = 0) Pageable pageable) {
+        Page<Facility> facilities;
+        if (facilityTypeId == -1) {
+            facilities = facilityService.getAllByNameSearch(nameSearch, pageable);
+        } else {
+            facilities = facilityService.getAllByNameSearchAndFacilityType(nameSearch, facilityTypeId, pageable);
         }
         model.addAttribute("facilities", facilities);
         model.addAttribute("facilityTypes", facilityTypeService.findAll());
         model.addAttribute("rentTypes", rentTypeService.findAll());
         model.addAttribute("nameSearch", nameSearch);
         model.addAttribute("facilityTypeId", facilityTypeId);
-        model.addAttribute("facility", new Facility());
+        if (model.getAttribute("facilityCreateDto") != null) {
+            model.addAttribute("facilityCreateDto", model.getAttribute("facilityCreateDto"));
+            model.addAttribute("flagCreate", "true");
+        } else {
+            model.addAttribute("facilityCreateDto", new FacilityDto());
+            model.addAttribute("flagCreate", "false");
+        }
+        if (model.getAttribute("facilityEditDto") != null) {
+            model.addAttribute("facilityEditDto", model.getAttribute("facilityEditDto"));
+            model.addAttribute("flagEdit", "true");
+        } else {
+            model.addAttribute("facilityEditDto", new FacilityDto());
+            model.addAttribute("flagEdit", "false");
+        }
         return "facility/list";
     }
 
@@ -51,7 +68,15 @@ public class FacilityController {
     }
 
     @PostMapping("/facility/create")
-    public String createFacility(@ModelAttribute Facility facility, RedirectAttributes attributes) {
+    public String createFacility(@Validated @ModelAttribute FacilityDto facilityCreateDto, BindingResult bindingResult, RedirectAttributes attributes) {
+        new FacilityDto().validate(facilityCreateDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            attributes.addFlashAttribute("facilityCreateDto", facilityCreateDto);
+            attributes.addFlashAttribute("org.springframework.validation.BindingResult.facilityCreateDto", bindingResult);
+            return "redirect:/furama/facility";
+        }
+        Facility facility = new Facility();
+        BeanUtils.copyProperties(facilityCreateDto, facility);
         boolean check = facilityService.save(facility);
         if (check) {
             attributes.addFlashAttribute("msg", "Thêm mới Thành công");
@@ -61,14 +86,22 @@ public class FacilityController {
             return "redirect:/furama/facility";
         }
     }
+
     @PostMapping("/facility/edit")
-    public String editFacility(@ModelAttribute Facility facility, RedirectAttributes redirectAttributes) {
+    public String editFacility(@Validated @ModelAttribute FacilityDto facilityEditDto,BindingResult bindingResult, RedirectAttributes attributes) {
+        if (bindingResult.hasErrors()){
+            attributes.addFlashAttribute("facilityEditDto",facilityEditDto);
+            attributes.addFlashAttribute("org.springframework.validation.BindingResult.facilityEditDto",bindingResult);
+            return "redirect:/furama/facility";
+        }
+        Facility facility = new Facility();
+        BeanUtils.copyProperties(facilityEditDto,facility);
         boolean check = facilityService.edit(facility);
         if (!check) {
-            redirectAttributes.addFlashAttribute("msg", "Không Sửa thành công");
+            attributes.addFlashAttribute("msg", "Không Sửa thành công");
             return "redirect:/furama/facility";
         } else {
-            redirectAttributes.addFlashAttribute("msg", "Sửa thành công");
+            attributes.addFlashAttribute("msg", "Sửa thành công");
             return "redirect:/furama/facility";
         }
     }

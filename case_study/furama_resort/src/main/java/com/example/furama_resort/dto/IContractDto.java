@@ -1,4 +1,4 @@
-package com.example.furama_resort.model.dto;
+package com.example.furama_resort.dto;
 
 public interface IContractDto {
     String getContractId();

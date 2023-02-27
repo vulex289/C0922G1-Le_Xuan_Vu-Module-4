@@ -1,7 +1,7 @@
 package com.example.furama_resort.repository.contract;
 
 import com.example.furama_resort.model.contract.Contract;
-import com.example.furama_resort.model.dto.IContractDto;
+import com.example.furama_resort.dto.IContractDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

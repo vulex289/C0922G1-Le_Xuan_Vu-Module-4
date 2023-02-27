@@ -25,7 +25,7 @@
         </form>
     </div>
 </div>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addfacility">ADD NEW FACILITY
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFacility">ADD NEW FACILITY
 </button>
 
 <table class="table table-striped table-bordered text-center" style="width:100%" id="furama">
@@ -62,7 +62,7 @@
         <td th:text="${stt.numberOfFloors}"></td>
         <td th:text="${stt.facilityFree}"></td>
         <td>
-            <button data-bs-toggle="modal" data-bs-target="#edit" type="button" class="btn btn-warning"
+            <button data-bs-toggle="modal" data-bs-target="#editFacility" type="button" class="btn btn-warning"
                     th:attr="onclick=|editFacility('${stt.id}','${stt.name}','${stt.area}',
                                 '${stt.cost}','${stt.maxPeople}','${stt.rentType.id}','${stt.facilityType.id}',
                                 '${stt.standardRoom}','${stt.descriptionOtherConvenience}','${stt.poolArea}','${stt.numberOfFloors}','${stt.facilityFree}')|">
@@ -102,7 +102,7 @@
     </div>
 </div>
 <!------------------------------------------------ThÊM------------------------------------>
-<div class="modal fade" id="addfacility" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addFacility" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -111,7 +111,7 @@
             </div>
             <div class="modal-body">
                 <form class="w-100 border border-2 border-success p-3  rounded" th:action="@{/facility/create}"
-                      method="post" th:object="${facility}">
+                      method="post" th:object="${facilityCreateDto}">
                     <input type="text" th:field="*{facilityType}" id="facilityTypeId" hidden>
                     <button id="villa" type="button" class="btn btn-outline-warning" onclick='addVilla()'><p>+Add
                         Villa</p>
@@ -125,21 +125,25 @@
                         <label for="recipient-name" class="col-form-label">Tên Dịch Vụ:</label>
                         <input type="text" class="form-control" th:field="*{name}"
                                id="recipient-name">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{name}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Diện tích</label>
                         <input type="number" class="form-control"
                                th:field="*{area}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{area}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Giá Tiền</label>
                         <input type="number" class="form-control"
                                th:field="*{cost}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{cost}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Số lượng người tối đa</label>
                         <input type="number" class="form-control"
                                th:field="*{maxPeople}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{maxPeople}"></p>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Kiểu Thuê</label>
@@ -150,24 +154,29 @@
                     <div class="mb-3" id="standardRoom">
                         <label for="recipient-name" class="col-form-label">Tiêu Chuẩn Phòng</label>
                         <input type="text" class="form-control" th:field="*{standardRoom}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{standardRoom}"></p>
                     </div>
                     <div class="mb-3" id="descriptionOtherConvenience">
                         <label for="recipient-name" class="col-form-label">Mô tả tiện nghi</label>
                         <input type="text" class="form-control" th:field="*{descriptionOtherConvenience}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{descriptionOtherConvenience}"></p>
                     </div>
                     <div class="mb-3" id="poolArea">
                         <label for="recipient-name" class="col-form-label">Diện tích hồ bơi</label>
                         <input type="number" class="form-control"
                                th:field="*{poolArea}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{poolArea}"></p>
                     </div>
                     <div class="mb-3" id="numberOfFloors">
                         <label for="recipient-name" class="col-form-label">Số tầng</label>
                         <input required type="number" class="form-control"
                                th:field="*{numberOfFloors}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{numberOfFloors}"></p>
                     </div>
                     <div class="mb-3" id="facilityFree">
                         <label for="recipient-name" class="col-form-label">Dich vụ miễn phí</label>
                         <input type="text" class="form-control" th:field="*{facilityFree}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{facilityFree}"></p>
                     </div>
                     <div class="mb-3 ">
                         <input type="submit" id="btnSave"
@@ -180,7 +189,7 @@
     </div>
 </div>
 <!----------------------------------------------Sửa--------------------------------------------->
-<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="editFacility" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -189,27 +198,31 @@
             </div>
             <div class="modal-body">
                 <form class="w-100 border border-2 border-success p-3  rounded" th:action="@{/facility/edit}"
-                      method="post" th:object="${facility}">
+                      method="post" th:object="${facilityEditDto}">
                     <input type="text" th:field="*{facilityType}" id="newFacilityTypeId" hidden>
                     <input type="text" th:field="*{id}" id="id" hidden>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Tên Dịch Vụ:</label>
                         <input type="text" id="newName" class="form-control" th:field="*{name}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{name}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Diện tích</label>
                         <input id="newArea" type="number" class="form-control"
                                th:field="*{area}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{area}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Giá Tiền</label>
                         <input type="number" class="form-control"
                                id="newCost" th:field="*{cost}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{cost}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label">Số lượng người tối đa</label>
                         <input type="number" class="form-control"
                                id="newMaxPeople" th:field="*{maxPeople}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{maxPeople}"></p>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Kiểu Thuê</label>
@@ -221,25 +234,30 @@
                     <div class="mb-3" id="editStandardRoom">
                         <label for="recipient-name" class="col-form-label">Tiêu Chuẩn Phòng</label>
                         <input type="text" id="newStandardRoom1" class="form-control" th:field="*{standardRoom}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{standardRoom}"></p>
                     </div>
                     <div class="mb-3" id="editDescriptionOtherConvenience">
                         <label for="recipient-name" class="col-form-label">Mô tả tiện nghi</label>
                         <input type="text" id="newDescriptionOtherConvenience1" class="form-control"
                                th:field="*{descriptionOtherConvenience}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{descriptionOtherConvenience}"></p>
                     </div>
                     <div class="mb-3" id="editPoolArea">
                         <label for="recipient-name" class="col-form-label">Diện tích hồ bơi</label>
                         <input id="newPoolArea1" type="number" class="form-control"
                                th:field="*{poolArea}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{poolArea}"></p>
                     </div>
                     <div class="mb-3" id="editNumberOfFloors">
                         <label for="recipient-name" class="col-form-label">Số tầng</label>
                         <input id="newNumberOfFloors1" required type="number" class="form-control"
                                th:field="*{numberOfFloors}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{numberOfFloors}"></p>
                     </div>
                     <div class="mb-3" id="editFacilityFree">
                         <label for="recipient-name" class="col-form-label">Dich vụ miễn phí</label>
                         <input id="newFacilityFree1" type="text" class="form-control" th:field="*{facilityFree}">
+                        <p style="color: red" th:if="${#fields.hasErrors()}" th:errors="*{facilityFree}"></p>
                     </div>
                     <div class="mb-3 ">
                         <input type="submit"
@@ -263,7 +281,8 @@
 </div>
 <div th:replace="~{/home::footer}"></div>
 </body>
-
+<input type="text" hidden th:value="${flagCreate}" id="flagCreate">
+<input type="text" hidden th:value="${flagEdit}" id="flagEdit">
 <script>
     // $(document).ready(function () {
     //     $('.modal').on('hidden.bs.modal', function () {
@@ -273,7 +292,15 @@
     $('.modal').on('hide.bs.modal', function () {
         $('.input-field').val('');
     });
+$(document).ready(function (){
+    if ($('#flagCreate').val()==='true'){
+        $('#addFacility').modal('show');
+    }
+    if ($('#flagEdit').val()==='true'){
+        $('#editFacility').modal('show');
+    }
 
+})
     function deleteFacility(id, name) {
         document.getElementById("idDelete").value = id;
         document.getElementById("nameDelete").innerText = name;
@@ -295,7 +322,6 @@
     }
 
     function addRoom() {
-        var room = document.getElementById('room');
         document.getElementById("facilityTypeId").value = 3;
         var standardRoom = document.getElementById('standardRoom');
         var descriptionOtherConvenience = document.getElementById('descriptionOtherConvenience');
@@ -311,7 +337,6 @@
 
     function addHouse() {
         document.getElementById("facilityTypeId").value = 2;
-        var house = document.getElementById('house');
         var standardRoom = document.getElementById('standardRoom');
         var descriptionOtherConvenience = document.getElementById('descriptionOtherConvenience');
         var poolArea = document.getElementById('poolArea');

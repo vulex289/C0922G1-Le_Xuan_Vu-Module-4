@@ -7,6 +7,7 @@
 </head>
 <body>
 <div th:replace="~{/home::nav}"></div>
+<div class="container-fluid">
 <span th:text="${msg}" style="color:red;"></span>
 <h1 class="text-center my-3">LIST CUSTOMER </h1>
 <div class="row my-1">
@@ -79,7 +80,7 @@
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form method="post" th:action="@{customer/delete}">
+        <form method="post" th:action="@{/customer/delete}">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">DELETE CUSTOMER</h1>
@@ -109,6 +110,7 @@
         <button type="button" class="btn btn-primary">Next</button>
     </a>
     <!--    <p th:text="${customers.number}"></p>-->
+</div>
 </div>
 <div th:replace="~{/home::footer}"></div>
 </body>

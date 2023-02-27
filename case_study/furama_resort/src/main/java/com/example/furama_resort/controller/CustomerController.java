@@ -1,8 +1,10 @@
 package com.example.furama_resort.controller;
 
+import com.example.furama_resort.dto.CustomerDto;
 import com.example.furama_resort.model.customer.Customer;
 import com.example.furama_resort.service.customer.ICustomerService;
 import com.example.furama_resort.service.customer.ICustomerTypeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,7 +27,10 @@ public class CustomerController {
     private ICustomerTypeService customerTypeService;
 
     @GetMapping("/furama/customer")
-    public String showList(Model model, @RequestParam(defaultValue = "", required = false) String nameSearch, @RequestParam(defaultValue = "", required = false) String email, @RequestParam(defaultValue = "-1", required = false) long customerTypeId, @PageableDefault(page = 0, size = 4, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    public String showList(Model model, @RequestParam(defaultValue = "", required = false) String nameSearch,
+                           @RequestParam(defaultValue = "", required = false) String email,
+                           @RequestParam(defaultValue = "-1", required = false) long customerTypeId,
+                           @PageableDefault(page = 0, size = 4, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         for (Customer customer : customerService.findAll()) {
             if (customer.getDateOfBirth().contains("-")) {
                 String[] arr = customer.getDateOfBirth().split("-");
@@ -53,17 +60,25 @@ public class CustomerController {
 
     @GetMapping("/customer/create")
     public String showFormCreate(Model model) {
-        model.addAttribute("customer", new Customer());
+        model.addAttribute("customerDto", new CustomerDto());
         LocalDate minAge = LocalDate.now().minusYears(70);
         LocalDate maxAge = LocalDate.now().minusYears(18);
-        model.addAttribute("customerTypeList", customerTypeService.findAll());
         model.addAttribute("minAge", minAge);
         model.addAttribute("maxAge", maxAge);
+        model.addAttribute("customerTypeList", customerTypeService.findAll());
         return "customer/create";
     }
 
-    @PostMapping("customer/create")
-    public String save(Model model, @ModelAttribute Customer customer) {
+    @PostMapping("/customer/create")
+    public String save(@Validated @ModelAttribute CustomerDto customerDto, BindingResult bindingResult, Model model) {
+        new CustomerDto().validate(customerDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("customerDto", customerDto);
+            model.addAttribute("customerTypeList", customerTypeService.findAll());
+            return "customer/create";
+        }
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDto, customer);
         boolean check = customerService.save(customer);
         if (!check) {
             model.addAttribute("msg", "Thêm mới thành công");
@@ -80,32 +95,42 @@ public class CustomerController {
         if (customer == null) {
             return "error";
         } else {
-            model.addAttribute("customer", customer);
+            CustomerDto customerDto = new CustomerDto();
+            BeanUtils.copyProperties(customer, customerDto);
+            model.addAttribute("customerDto", customerDto);
             model.addAttribute("customerTypeList", customerTypeService.findAll());
             return "customer/edit";
         }
     }
 
-    @PostMapping("customer/edit")
-    public String edit(@ModelAttribute Customer customer, RedirectAttributes attributes) {
+    @PostMapping("/customer/edit")
+    public String edit(@Validated @ModelAttribute CustomerDto customerDto, BindingResult bindingResult, Model model, RedirectAttributes attributes) {
+        new CustomerDto().validate(customerDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("customerDto", customerDto);
+            model.addAttribute("customerTypeList", customerTypeService.findAll());
+            return "customer/edit";
+        }
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDto, customer);
         boolean check = customerService.edit(customer);
         if (check) {
             attributes.addFlashAttribute("msg", "Sửa thành công");
-            return "redirect:/furama/customer1";
+            return "redirect:/furama/customer";
         } else {
             attributes.addFlashAttribute("msg", "Không Sửa thành công");
-            return "redirect:/furama/customer1";
+            return "redirect:/furama/customer";
         }
     }
 
-    @PostMapping("customer/delete")
+    @PostMapping("/customer/delete")
     public String deleteLogic(@RequestParam long idDelete, RedirectAttributes attributes) {
         customerService.deleteLogic(idDelete);
         attributes.addFlashAttribute("msg", "Xóa thành công");
         return "redirect:/furama/customer";
     }
 
-    @PostMapping("customer/delete1")
+    @PostMapping("/customer/delete1")
     public String remove(@RequestParam long idDelete, RedirectAttributes attributes) {
         customerService.delete(customerService.findById(idDelete));
         attributes.addFlashAttribute("msg", "Xóa thành công");

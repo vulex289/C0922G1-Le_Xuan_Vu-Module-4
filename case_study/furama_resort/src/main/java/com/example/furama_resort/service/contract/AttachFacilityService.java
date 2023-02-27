@@ -1,7 +1,7 @@
 package com.example.furama_resort.service.contract;
 
 import com.example.furama_resort.model.contract.AttachFacility;
-import com.example.furama_resort.model.dto.IAttachFacilityDto;
+import com.example.furama_resort.dto.IAttachFacilityDto;
 import com.example.furama_resort.repository.contract.IAttachFacilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

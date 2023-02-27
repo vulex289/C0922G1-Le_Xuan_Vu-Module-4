@@ -1,9 +1,9 @@
 package com.example.furama_resort.controller;
 
 import com.example.furama_resort.model.contract.Contract;
-import com.example.furama_resort.model.contract.ContractAndAttachFacilityDto;
+import com.example.furama_resort.dto.ContractAndAttachFacilityDto;
 import com.example.furama_resort.model.contract.ContractDetail;
-import com.example.furama_resort.model.dto.IAttachFacilityDto;
+import com.example.furama_resort.dto.IAttachFacilityDto;
 import com.example.furama_resort.service.contract.IAttachFacilityService;
 import com.example.furama_resort.service.contract.IContractDetailService;
 import com.example.furama_resort.service.contract.IContractService;
@@ -13,9 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -47,9 +44,12 @@ public class ContractRestController {
             Contract contract = new Contract();
             BeanUtils.copyProperties(contractAndAttachFacilityDtos.get(0).getContract(), contract);
             Contract contract1 = contractService.save(contract);
-            for (int i = 0; i < contractAndAttachFacilityDtos.size(); i++) {
+            if (contractAndAttachFacilityDtos.get(0).getAttachFacility()==null){
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
+            for (ContractAndAttachFacilityDto contractAndAttachFacilityDto : contractAndAttachFacilityDtos) {
                 ContractDetail contractDetail = new ContractDetail();
-                BeanUtils.copyProperties(contractAndAttachFacilityDtos.get(i), contractDetail);
+                BeanUtils.copyProperties(contractAndAttachFacilityDto, contractDetail);
                 contractDetail.setContract(contract1);
                 contractDetailService.save(contractDetail);
             }

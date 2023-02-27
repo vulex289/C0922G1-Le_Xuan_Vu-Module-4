@@ -1,4 +1,7 @@
-package com.example.furama_resort.model.contract;
+package com.example.furama_resort.dto;
+
+import com.example.furama_resort.model.contract.AttachFacility;
+import com.example.furama_resort.model.contract.Contract;
 
 public class ContractAndAttachFacilityDto {
     private AttachFacility attachFacility;

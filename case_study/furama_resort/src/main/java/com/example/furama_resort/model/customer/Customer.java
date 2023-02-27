@@ -1,9 +1,6 @@
 package com.example.furama_resort.model.customer;
-
 import com.example.furama_resort.model.contract.Contract;
-
 import javax.persistence.*;
-import javax.validation.Constraint;
 import java.util.Set;
 
 @Entity

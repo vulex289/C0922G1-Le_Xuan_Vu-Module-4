@@ -8,64 +8,69 @@
 <body>
 <div th:replace="~{/home::nav}"></div>
 <span th:text="${msg}" style="color:red;"></span>
-<h1 class="text-center my-3">LIST CONTRACT</h1>
+<div class="container-fluid">
+    <h1 class="text-center my-3">LIST CONTRACT</h1>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDetailContract"
-        data-bs-whatever="@mdo">ADD NEW CONTRACT
-</button>
-<table class="table table-striped table-bordered text-center" style="width:100%" id="furama">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Dịch vụ</th>
-        <th scope="col">Khách hàng</th>
-        <th scope="col">Ngày bắt đầu</th>
-        <th scope="col">Ngày kết thúc</th>
-        <th scope="col">Tiền đặt cọc</th>
-        <th scope="col">Tổng Tiền</th>
-        <th scope="col" rowspan="2">Các dịch vụ đi kèm</th>
-    </tr>
-    </thead>
-    <tbody class="table-group-divider">
-    <tr th:each="stt,status: ${contracts}">
-        <td th:text="${status.count}"></td>
-        <td th:text="${stt.facilityName}"></td>
-        <td th:text="${stt.customerName}"></td>
-        <td th:text="${stt.startDate}"></td>
-        <td th:text="${stt.endDate}"></td>
-        <td th:text="${stt.deposit}"></td>
-        <td th:text="${stt.total}"></td>
-        <td>
-            <button type="button" th:attr="onclick=|getInfoContract('${stt.contractId}')|" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#addAttachFacility"
-                    data-bs-whatever="@mdo">+
-            </button>
-            <button type="button" th:attr="onclick=|getInfoAttachDetail('${stt.contractId}')|" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#showService"
-                    data-bs-whatever="@fat">Hiển thị danh sách dịch vụ
-            </button>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<!-- Modal -->
-<div class="modal fade" id="addDetailContract" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form class="vh-100" method="post" th:object="${contract}">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add detail contract</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" th:field="*{id}" id="newContractId" hidden>
-                    <div class="mb-3">
-                        <label class="form-label">Start date</label>
-                        <input th:field="*{startDate}" type="date" id="newStartDate" class="form-control">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDetailContract"
+            data-bs-whatever="@mdo">ADD NEW CONTRACT
+    </button>
+    <table class="table table-striped table-bordered text-center" style="width:100%" id="furama">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Dịch vụ</th>
+            <th scope="col">Khách hàng</th>
+            <th scope="col">Ngày bắt đầu</th>
+            <th scope="col">Ngày kết thúc</th>
+            <th scope="col">Tiền đặt cọc</th>
+            <th scope="col">Tổng Tiền</th>
+            <th scope="col" rowspan="2">Các dịch vụ đi kèm</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        <tr th:each="stt,status: ${contracts}">
+            <td th:text="${status.count}"></td>
+            <td th:text="${stt.facilityName}"></td>
+            <td th:text="${stt.customerName}"></td>
+            <td th:text="${stt.startDate}"></td>
+            <td th:text="${stt.endDate}"></td>
+            <td th:text="${stt.deposit}"></td>
+            <td th:text="${stt.total}"></td>
+            <td>
+                <button type="button" th:attr="onclick=|getInfoContract('${stt.contractId}')|" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#addAttachFacility"
+                        data-bs-whatever="@mdo">+
+                </button>
+                <button type="button" th:attr="onclick=|getInfoAttachDetail('${stt.contractId}')|"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#showService"
+                        data-bs-whatever="@fat">Hiển thị danh sách dịch vụ
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- Modal -->
+    <div class="modal fade" id="addDetailContract" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="vh-100" method="post" th:object="${contract}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add detail contract</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body">
+                        <input type="text" th:field="*{id}" id="newContractId" hidden>
+                        <div class="mb-3">
+                            <div class="input-group date" id="startDatepicker"></div>
+                            <label class="form-label">Start date</label>
+                            <input th:field="*{startDate}" type="date" id="newStartDate" class="form-control">
+                        </div>
                     <div class="mb-3">
                         <label class="form-label">End date</label>
+                        <div class="input-group date" id="endDatepicker"></div>
                         <input type="date" th:field="*{endDate}" id="newEndDate" class="form-control">
+                    </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Deposit</label>
@@ -122,15 +127,15 @@
                             <img src="https://img.icons8.com/offices/30/null/plus-2-math.png"/>
                         </button>
                     </div>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="addContract()">Save
-                        changes
-                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="addContract()" data-bs-dismiss="modal">Save</button>
+<!--                    <button type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="addContract()">Save-->
+<!--                        changes-->
+<!--                    </button>-->
                 </div>
-            </div>
-            >
+
+    </div>
         </form>
     </div>
 </div>
@@ -213,7 +218,46 @@
         </form>
     </div>
 </div>
+</div>
 <div th:replace="~{/home::footer}"></div>
+<!------------------------------Thông báo lỗi ngày hợp đồng------------------------------>
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="errorModalLabel">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Error message will be displayed here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Thông báo thành công tạo hợp đồng-->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" >Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-primary">Bạn đã tạo hợp đồng thành công</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script>
     function getInfoContract(id) {
@@ -284,7 +328,8 @@
             this.quantity = quantity;
         }
     }
-debugger
+
+    debugger
     let attachFacilityArr = []
     $('#addContract').click(function () {
         $(document).ready(function () {
@@ -300,7 +345,6 @@ debugger
 
     function showAllAttachFacility() {
         let table = "";
-        debugger
         for (let i = 0; i < attachFacilityArr.length; i++) {
             table += `"<tr>"+"<td class='text-primary text-center'>${i + 1}</td>"+"<td class='text-primary text-center'>${attachFacilityArr[i].attachFacilityName}</td>
 "+"<td class='text-primary text-center'>${attachFacilityArr[i].quantity}</td>"+"<td> <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#remove"
@@ -325,6 +369,8 @@ debugger
         let employeeId = document.getElementById("newEmployee").value;
         let facilityId = document.getElementById("newFacility").value;
         let deposit = document.getElementById("newDeposit").value;
+
+
         let customer = {
             id: customerId
         }
@@ -342,7 +388,6 @@ debugger
             facility: facility,
             deposit: deposit
         }
-        debugger
         if (attachFacilityArr.length > 0) {
             for (let i = 0; i < attachFacilityArr.length; i++) {
                 let newAttachFacility = {
@@ -362,6 +407,16 @@ debugger
             }
             contractAndAttachFacility.push(newContractDetail)
         }
+        // So sánh ngày bắt đầu và kết thúc hợp đồng
+        let startDate = new Date(startDateValue);
+        let endDate = new Date(endDateValue);
+        let diff = endDate.getTime() - startDate.getTime();
+        let diffInDays = diff / (1000 * 3600 * 24);
+        debugger
+        if (diffInDays < 1) {
+            showErrorModal('Ngày bắt đầu hợp đồng phải nhỏ hơn ngày kết thúc hợp đồng 1 ngày');
+            return;
+        }
         $.ajax({
             headers: {
                 'Accept': 'application/json',
@@ -371,9 +426,19 @@ debugger
             data: JSON.stringify(contractAndAttachFacility),
             url: "http://localhost:8080/api/contract/create",
             success: function (data) {
+                sessionStorage.setItem("flagCreateContract",true);
                 window.location.reload();
             },
+            // error: function(jqXHR, textStatus, errorThrown) {
+            //     $('#errorModal').modal('show');
+            //     $('#errorMessage').text(jqXHR.responseJSON.message);
+            // }
         })
+    }
+
+    function showErrorModal(errorMessage) {
+        $('#errorModal .modal-body').html(errorMessage);
+        $('#errorModal').modal('show');
     }
 
     function deleteFacility(id) {
@@ -384,7 +449,6 @@ debugger
     $(document).ready(function () {
         // Lắng nghe sự kiện input trên các ô input
         $('#newStartDate, #newEndDate, #newDeposit, #newFacility,#newQuantity,#idAttachFacility').on('input', function () {
-            debugger
             // Lấy giá trị của các ô input
             let startDate = new Date($('#newStartDate').val());
             let endDate = new Date($('#newEndDate').val());
@@ -403,6 +467,27 @@ debugger
             $('#newTotal').val(total);
         });
     });
-
+    debugger
+    // $(document).ready(function()  {
+    //         $('#newStartDate').datepicker({
+    //             dateFormat: 'dd/mm/yyyy',
+    //             changeMonth:true,
+    //         });
+    //
+    //         $('#newEndDate').datepicker({
+    //             dateFormat: 'dd/mm/yyyy',
+    //             changeMonth:true,
+    //         });
+    //
+    // });
+    $(document).ready(function () {
+        if (sessionStorage.getItem("flagCreateContract")){
+            $('#successModal').modal('show');
+        }
+        sessionStorage.removeItem("flagCreateContract");
+    })
 </script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 </html>
