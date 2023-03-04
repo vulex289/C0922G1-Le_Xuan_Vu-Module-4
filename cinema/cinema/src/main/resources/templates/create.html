@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Exam</title>
+    <style type="text/css">
+        h3 {
+            text-align: center;
+            background-color: lightsteelblue;
+            color: white;
+            padding: 10px 0 10px 20px;
+        }
+
+        footer {
+            margin: 10px 0;
+        }
+
+        #furama {
+            text-align: center;
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        nav {
+
+            background-size: 100%;
+            background-image: url("https://cutewallpaper.org/21/background/Geometric-Background-Sketch-freebie-Download-free-resource-.png");
+            background-attachment: fixed;
+        }
+
+        #furama td, #furama th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #furama tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #furama tr:hover {
+            background-color: #ddd;
+        }
+
+        #furama th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            background-color: dimgray;
+            color: white;
+            text-align: center;
+        }
+
+        input[type=text], input[type=email], input[type=number], select, option {
+            width: 100%;
+            padding: 12px 0px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        p {
+            font-family: Century;
+            font-size: 17px;
+        }
+
+        input[type=submit] {
+            width: 300px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        input:invalid {
+            border: 1px solid red;
+        }
+
+        input:valid {
+            border: 1px solid green;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        .notify span {
+            font-size: 15px;
+            color: blue;
+        }
+
+    </style>
+    <script src="/jquery-3.6.3.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap.min.css"/>
+    <script src="/bootstrap.bundle.min.js"></script>
+</head>
+<body style="background-image: url('https://image.winudf.com/v2/image/Y29tLlJlc29ydHdhbGxwYXBlcnMucGljdHVyZXMuYmFja2dyb3VuZHMucGhvdG9zLmltYWdlcy5oZC5mcmVlLmJlYXV0aWZ1bF9zY3JlZW5fMl8xNTMzODgyMTk0XzA4OQ/screen-2.jpg?fakeurl=1&type=.webp')">
+<h2 class="text-center">INFORMATION</h2>
+<a>
+    <button class="btn btn-primary">Back to List</button>
+</a>
+
+<div class="d-flex justify-content-center">
+    <form class="w-50 border border-2 border-success p-3 rounded" method="post">
+        <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Tên :</label>
+            <input type="text" class="form-control"  id="recipient-name">
+        </div>
+        <div class="mb-3">
+            <label class="form-label d-block me-4">Giới tính</label>
+            <div class="form-check">
+                <input  class="form-check-input" type="radio" name="flexRadioDefault"
+                       id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Male
+                </label>
+            </div>
+            <div class="form-check">
+                <input  class="form-check-input" type="radio" name="flexRadioDefault"
+                       id="flexRadioDefault2" checked>
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Female
+                </label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">CMND</label>
+            <input required type="text" class="form-control">
+
+        </div>
+        <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Số điện thoại</label>
+            <input type="text" class="form-control" >
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Loại khách hàng</label>
+            <select class="form-select" aria-label="Default select example">
+                <option   ></option>
+            </select>
+        </div>
+        <div class="mb-3 text-center">
+            <input type="submit" id="btnSave"
+                   class=" form-control btn btn-info btn-outline-success btn-sm border border-2 border-success text-dark "
+                   value="SAVE">
+        </div>
+    </form>
+</div>
+</body>
+<footer>
+    <div class="blockquote-footer align-content-center container-fluid bg-primary text-center">
+        <p class="text-light">FINAL_EXAM_MODULE_4
+        </p>
+        <p class="text-light">@LE_XUAN_VU_2023
+        </p>
+    </div>
+</footer>
+<script>
+
+</script>
+</html>
